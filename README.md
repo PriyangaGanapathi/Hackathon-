@@ -1,5 +1,34 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Directory Structure
+
+```shell
+├── node_modules/     # Installed packages necessary for Create-React-App
+├── public/           # Static files
+│   ├── favicon.ico
+│   └── index.html
+├── src/              # Application root
+│   ├── components/   # Application components
+│   │   └── SampleComponent/
+│   │       ├── index.jsx
+│   │       ├── styles.scss
+│   │       └── SampleComponent.test.js
+│   ├── services/     # Service level modules. e.g., web-service-handler.js
+│   ├── routes/       # Application routes. e.g., Login, SignUp, Home
+│   ├── config/       # Application configuration related files
+│   │   └── constants.js
+│   ├── index.scss
+│   ├── index.jsx
+│   ├── App.jsx
+│   ├── app.scss
+│   └── App.test.js
+├── package.json
+├── README.md
+└── yarn.lock
+
+4 directories, 12 files
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
