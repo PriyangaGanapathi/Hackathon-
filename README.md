@@ -1,3 +1,6 @@
+pre-requests 
+npm install pm2 -g (http://pm2.keymetrics.io/)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Directory Structure
@@ -65,6 +68,15 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+### `npm run start-server`
+It will start the mock server in a different process on 3001 port and enables file watch.<br/> 
+All console.log will be available on pm2 logs command.<br/>
+pm2 flush will clear all logs.
+(refer pm2 document for more info) 
+
+### `npm run stop-server`
+It will stop the mock server and disables file watch 
 
 ## Learn More
 
