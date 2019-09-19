@@ -11,6 +11,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 │   ├── favicon.ico
 │   └── index.html
 ├── src/              # Application root
+|   |
+|   ├── assets
+│   │   └── images/   # logo, icon etc., 
 │   ├── components/   # Application components
 │   │   └── SampleComponent/
 │   │       ├── index.jsx
