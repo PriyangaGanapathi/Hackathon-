@@ -20,7 +20,18 @@ function isURLSearchParams(val) {
   return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
 }
 
+/**
+ * Determine if a value is a FormData object
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a FormData object, otherwise false
+ */
+function isFormData(val) {
+	return typeof FormData !== 'undefined' && val instanceof FormData;
+}
+
 module.exports = {
   isObject: isObject,
   isURLSearchParams: isURLSearchParams,
+  isFormData: isFormData
 };

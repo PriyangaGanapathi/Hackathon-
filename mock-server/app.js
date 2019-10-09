@@ -29,7 +29,21 @@ app.use(express.static(path.join(__dirname, 'public')));
             );
         }
     });
-    //app.use('/', require('./routes/index'));
+    app.use('/', require('./routes/index'));
+})();
+
+(function() {
+    // dynamically include routes (Controller)
+    var routerPath = path.join(__dirname, 'routes/test');
+    fs.readdirSync(routerPath).forEach(function(fileName) {
+        if (fileName.substr(-3) === '.js') {
+            app.use(
+                '/test/' + fileName.substring(0, fileName.length - 3),
+                require('./routes/test/' + fileName)
+            );
+        }
+    });
+    app.use('/test/', require('./routes/test/index'));
 })();
 
 // catch 404 and forward to error handler

@@ -1,4 +1,4 @@
-import utils from './utils';
+import utils from '../utils';
 
 function buildQueryString(object) {
 	if (Object.prototype.toString.call(object) !== '[object Object]') return '';
@@ -78,11 +78,21 @@ function buildPathname(template, params) {
 	return result;
 }
 
+function constructError(message, config, request) {
+	var error = new Error(message);
+	error.config = config;
+	error.request = request;
+	return error;
+}
+
+var hasOwnProperty = Object.hasOwnProperty;	
+
 export default function request(url, config) {
 	return new Promise(function (resolve, reject) {
 		var requestData = config.data || null;
 
-		var request = new XMLHttpRequest();
+		var request = new XMLHttpRequest(),
+			abort = false;
 
 		request.open(config.method.toUpperCase(),  buildPathname(url, config.params),
 			true, (config.auth && config.auth.username) || null, (config.auth && config.auth.password) || null);
@@ -93,31 +103,43 @@ export default function request(url, config) {
 			request.withCredentials = true;
 		}
 
+		if (config.onRequestConstruct && typeof config.onRequestConstruct === 'function') {
+			config.onRequestConstruct({
+				requestObject: request, 
+				cancelRequest: () => {
+					if (request && request.readyState !== 4) {
+						abort = true;
+						request.abort();
+					}
+				}
+			});
+		}
+
 		request.responseType = config.responseType || 'json';
 
 		//set headers
 		if (requestData) {
-			if (utils.isObject(requestData)) {
-				request.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
-				requestData = JSON.stringify(requestData);
-			}
-
 			if (utils.isURLSearchParams(requestData)) {
 				request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
 				requestData = requestData.toString();
+			} else if (utils.isFormData(requestData)) {
+				// Let the browser set content-type for form data
+			} else if (utils.isObject(requestData)) {
+				request.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
+				requestData = JSON.stringify(requestData);
 			}
 		}
-		request.setRequestHeader('Accept', 'application/json, text/*');
+		request.setRequestHeader('Accept', 'application/json, text');
 		 //Custom headers
 		for (var key in config.headers) {
-			if ({}.hasOwnProperty.call(config.headers, key)) {
+			if (hasOwnProperty.call(config.headers, key)) {
 				request.setRequestHeader(key, config.headers[key]);
 			}
 		}
 
-		 // Listen for ready state
 		request.onreadystatechange = function() {
-			if (!request || request.readyState !== 4) {
+
+			if (abort || !request || request.readyState !== 4) {
 				return;
 			}
 
@@ -125,23 +147,10 @@ export default function request(url, config) {
 			if ((request.status >= 200 && request.status < 300)
 				|| request.status === 304 || /^file:\/\//i.test(url)) {
 				// Prepare the response
-				var responseHeaders = 'getAllResponseHeaders' in request ? request.getAllResponseHeaders() : null;
-				var responseData = config.responseType === 'text' ? request.responseText : request.response;
-				var response = {
-					data: responseData,
-					status: request.status,
-					statusText: request.statusText,
-					headers: responseHeaders,
-					config: config,
-					request: request
-				};
-
-				resolve(response);
+				let responseData = config.responseType === 'text' ? request.responseText : request.response;
+				resolve(responseData);
 			} else {
-				var error = new Error(request.responseText);
-				error.config = request.config;
-				error.request = request.request;
-				reject(error);
+				reject(constructError('server error', config, request));
 			}
 
 			// Clean up request
@@ -150,15 +159,8 @@ export default function request(url, config) {
 
 		// Handle browser request cancellation (as opposed to a manual cancellation)
 		request.onabort = function handleAbort() {
-			if (!request) {
-				return;
-			}
 
-			var error = new Error('Request aborted');
-				error.config = config;
-				error.request = request;
-
-			reject(error);
+			reject(constructError('Request aborted', config, request));
 
 			// Clean up request
 			request = null;
@@ -168,23 +170,7 @@ export default function request(url, config) {
 		request.onerror = function handleError() {
 			// Real errors are hidden from us by the browser
 			// onerror should only fire if it's a network error
-			var error = new Error('Network Error');
-				error.config = config;
-				error.request = request;
-
-			reject(error);
-
-			// Clean up request
-			request = null;
-		};
-
-		// Handle timeout
-		request.ontimeout = function handleTimeout() {
-			var error = new Error('timeout of ' + config.timeout + 'ms exceeded');
-				error.config = config;
-				error.request = request;
-
-			reject(error);
+			reject(constructError('Network Error', config, request));
 
 			// Clean up request
 			request = null;
