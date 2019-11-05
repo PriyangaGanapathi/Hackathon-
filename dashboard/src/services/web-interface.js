@@ -2,7 +2,7 @@ import request from '../helpers/xhr';
 import { authenticationListener, AUTHENTICATION_EVENTS } from '../context/useAuthentication';
 import { LOCAL_STORAGE_KEYS } from '../config/constants';
 
-var BASE_URL = process.env.REACT_APP_BASE_URL;
+var BASE_URL = process.env.BASE_URL;
 BASE_URL = BASE_URL[BASE_URL.length - 1] !== '/' ? BASE_URL + '/' : BASE_URL;
 
 /**

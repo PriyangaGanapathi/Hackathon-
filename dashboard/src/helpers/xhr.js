@@ -1,4 +1,4 @@
-import utils from '../utils';
+import  * as utils from '../utils';
 
 function buildQueryString(object) {
 	if (Object.prototype.toString.call(object) !== '[object Object]') return '';

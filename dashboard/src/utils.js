@@ -6,7 +6,7 @@
  * @param {Object} val The value to test
  * @returns {boolean} True if value is an Object, otherwise false
  */
-function isObject(val) {
+export function isObject(val) {
   return val !== null && typeof val === 'object';
 }
 
@@ -16,7 +16,7 @@ function isObject(val) {
  * @param {Object} val The value to test
  * @returns {boolean} True if value is a URLSearchParams object, otherwise false
  */
-function isURLSearchParams(val) {
+export function isURLSearchParams(val) {
   return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
 }
 
@@ -26,12 +26,6 @@ function isURLSearchParams(val) {
  * @param {Object} val The value to test
  * @returns {boolean} True if value is a FormData object, otherwise false
  */
-function isFormData(val) {
+export function isFormData(val) {
 	return typeof FormData !== 'undefined' && val instanceof FormData;
 }
-
-module.exports = {
-  isObject: isObject,
-  isURLSearchParams: isURLSearchParams,
-  isFormData: isFormData
-};
