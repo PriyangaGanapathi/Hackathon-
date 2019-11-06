@@ -6,6 +6,8 @@ module.exports = {
     //babel-jest will be automatically installed during the jest install
     transform: {
         '^.+\\.(js|jsx)$': 'babel-jest',
+        '^.+\\.(css|scss)$': '<rootDir>/config/tests/cssTransform.js',
+        '^(?!.*\\.(js|jsx|css|json)$)': '<rootDir>/config/tests/fileTransform.js',
     },
     // Automatically clear mock calls and instances between every test
     clearMocks: true,
@@ -18,10 +20,10 @@ module.exports = {
 
     // An array of file extensions your modules use
     moduleFileExtensions: ['js', 'jsx', 'json'],
-    
+
     // The paths to modules that run some code to configure or set up the testing environment before each test
     setupFiles: ['<rootDir>/config/tests/setup.test.js'],
-    
+
     setupFilesAfterEnv: ['<rootDir>/config/tests/enzyme.config.js'],
 
     // The test environment that will be used for testing
