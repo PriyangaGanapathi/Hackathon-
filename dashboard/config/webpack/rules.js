@@ -11,8 +11,8 @@ module.exports = [
             limit: fontInlineSizeLimit,
             name: '[name].[ext]',
             publicPath: '../fonts/',
-            outputPath: 'fonts/'
-        }
+            outputPath: 'fonts/',
+        },
     },
     {
         test: /\.(sa|sc|c)ss$/,
@@ -22,11 +22,11 @@ module.exports = [
                 options: {
                     hmr: process.env.NODE_ENV === 'development',
                     // if hmr does not work, this is a forceful method.
-                    reloadAll: process.env.NODE_ENV === 'development'
-                }
+                    reloadAll: process.env.NODE_ENV === 'development',
+                },
             },
             {
-                loader: 'css-loader'
+                loader: 'css-loader',
             },
             {
                 loader: 'postcss-loader',
@@ -36,18 +36,18 @@ module.exports = [
                         require('postcss-flexbugs-fixes'),
                         require('postcss-preset-env')({
                             autoprefixer: {
-                                flexbox: 'no-2009'
+                                flexbox: 'no-2009',
                             },
-                            stage: 3
+                            stage: 3,
                         }),
-                        postcssNormalize()
-                    ]
-                }
+                        postcssNormalize(),
+                    ],
+                },
             },
             {
-                loader: 'sass-loader'
-            }
-        ]
+                loader: 'sass-loader',
+            },
+        ],
     },
     {
         test: /\.(jpe?g|png|gif)$/,
@@ -57,25 +57,32 @@ module.exports = [
                 limit: imageInlineSizeLimit,
                 name: '[name].[hash:8].[ext]',
                 publicPath: '../images/',
-                outputPath: 'images/'
-            }
-        }
+                outputPath: 'images/',
+            },
+        },
     },
     {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-            loader: 'babel-loader'
-        }
+            loader: 'babel-loader',
+        },
+    },
+    {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        issuer: {
+            test: /\.jsx?$/,
+        },
+        use: ['@svgr/webpack'],
     },
     {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
-            limit: 1000,
+            limit: imageInlineSizeLimit,
             name: '[name].[hash:8].[ext]',
             publicPath: '../images/',
-            outputPath: 'images/'
-        }
-    }
+            outputPath: 'images/',
+        },
+    },
 ];
