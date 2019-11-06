@@ -43,4 +43,5 @@ module.exports = {
 
     // Indicates whether each individual test should be reported during the run
     verbose: true,
+    watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
 };
