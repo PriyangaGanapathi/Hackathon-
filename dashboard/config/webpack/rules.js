@@ -9,9 +9,7 @@ module.exports = [
         loader: 'url-loader',
         options: {
             limit: fontInlineSizeLimit,
-            name: '[name].[ext]',
-            publicPath: '../fonts/',
-            outputPath: 'fonts/',
+            name: 'fonts/[name].[ext]',
         },
     },
     {
@@ -23,6 +21,7 @@ module.exports = [
                     hmr: process.env.NODE_ENV === 'development',
                     // if hmr does not work, this is a forceful method.
                     reloadAll: process.env.NODE_ENV === 'development',
+                    publicPath: '../',
                 },
             },
             {
@@ -55,9 +54,7 @@ module.exports = [
             loader: 'url-loader',
             options: {
                 limit: imageInlineSizeLimit,
-                name: '[name].[hash:8].[ext]',
-                publicPath: '../images/',
-                outputPath: 'images/',
+                name: 'images/[name].[hash:8].[ext]',
             },
         },
     },
@@ -80,9 +77,7 @@ module.exports = [
         loader: 'url-loader',
         options: {
             limit: imageInlineSizeLimit,
-            name: '[name].[hash:8].[ext]',
-            publicPath: '../images/',
-            outputPath: 'images/',
+            name: 'images/[name].[hash:8].[ext]',
         },
     },
 ];
