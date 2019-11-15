@@ -6,76 +6,29 @@ import './styles.scss';
 
 export default function Dashboard() {
 
-	const [terms, setTerms] = useState([]);
-	const [categories, setCategories] = useState();
-	const [currentTerms, setCurrentTerms] = useState([]);
+	const [cards, setCards] = useState([]);
 
-	const getTerms = async (count) => {
+	const getCard = async () => {
 		try {
-			// const response = await sendWSRequest(`/fetch_keywords`, {
-			// 	params: {
-			// 		term_count: count
-			// 	}
-			// });
-			const response = [
-				{"keyword": "herceptin1", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-				},
-				{"keyword": "herceptin2", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-				},
-				{"keyword": "herceptin3", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-				},
-				{"keyword": "herceptin4", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-				},
-				{"keyword": "herceptin5", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-				}
-			];
-			setCurrentTerms(response.splice(0,5));
-			setTerms(response);
+			const response = await sendWSRequest(`/fetch_next_card`);
+			setCards(cards.concat(response));
 		} catch(error) {
 			console.log(error);
 		}	
-	};
-
-
-	const getCategories = async () => {
-		try {
-			const response = await sendWSRequest(`/fetch_concepts`);
-			updateCategories(response);
-		} catch(error) {
-			console.log(error);
-		}
-	};
-
-	const updateCategories = (categories) => {
-		const formatedData = categories.map( categorie => {
-			return {
-				value: categorie,
-				label: categorie
-			}
-		});
-		setCategories(formatedData);
 	};
 
 	useEffect(()=> {
-		getTerms(5);
-		getCategories();
+		getCard();
 	}, []);
 
-	const onRemoveCard = (keyword) => {
-		const newCurrentTerms = currentTerms.filter( term => term.keyword !== keyword);
-		if (terms.length) {
-			setCurrentTerms([...newCurrentTerms, terms[0]]);
-			const newTerms = terms.filter( (term, index) => index !== 0);
-			setTerms(newTerms);
-		} else {
-			setCurrentTerms(newCurrentTerms);
-		}	
+	const addNewCard = (card) => {
+		setCards(cards.concat(card));
 	}
 
 	return (
-		<div className="terms-list">
-            {currentTerms.map(term => (
-            	<Card key={term.keyword} type="classifications" content={term} options={categories} removeCard={onRemoveCard}/>
+		<div className="cards-container">
+            {cards.map( (card, index) => (
+            	<Card key={index} content={card} addNewCard={addNewCard}/>
             ))}
 	    </div>
 	);

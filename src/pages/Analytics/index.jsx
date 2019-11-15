@@ -81,11 +81,7 @@ export default function Analytics() {
               </div>
             </div>
           )}
-          {stats.confusion_matrix && (
-                <div>
-                  <ConfusionMatrixChart data={stats.confusion_matrix} />
-                </div>
-          )}
+          
         </div>
       </div>
     );

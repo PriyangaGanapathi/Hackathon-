@@ -31,7 +31,7 @@ export default function Home() {
 
 const Header = withRouter(({history}) => {
     const { unauthenticate } = useAuth();
-    
+
     return (
         <div className='header'>
             <img className="logo-icon" src={logoIcon} alt="" />

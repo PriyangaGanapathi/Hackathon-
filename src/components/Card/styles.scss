@@ -4,3 +4,24 @@
     border-radius: 7px;
     padding: 12px;
 }
+
+button {
+	border: none;
+    border-radius: 5px;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    font-size: 0.8rem;
+    padding: 9px;
+    margin-top: 25px;
+    color: white;
+    outline: none;
+    background-color: #0858cf;
+    
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

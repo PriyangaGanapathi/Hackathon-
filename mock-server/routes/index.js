@@ -18,22 +18,28 @@ router.get('/fetch_concepts', function(req, res, next) {
 });
 
 router.post('/save_feedback', function(req, res, next) {
-	res.status(200).send();
+	res.send({ 
+		"id": 1,
+		"next_card": {
+	    "card_type": 2,
+	    "card_details": {
+	       "keyword": "Herceptin",
+	        "rel_type": "MANUFACTURED BY",
+	        "rel_keyword": "Genentech Inc",
+	        "rel_keyword_rw_type": "Agency",
+	    }
+	}});
 });
 
-router.get('/fetch_keywords', function(req, res, next) {
-	res.send([
-		{"keyword": "herceptin1", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-		},
-		{"keyword": "herceptin2", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-		},
-		{"keyword": "herceptin3", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-		},
-		{"keyword": "herceptin4", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-		},
-		{"keyword": "herceptin5", "ferma_type": "Generic_drug", "real_world_type": "Generic_drug"
-		}
-	]);
+router.get('/fetch_next_card', function(req, res, next) {
+	res.send({
+	    "card_type": 1,
+	    "card_details": {
+	        "keyword": "herceptin",
+	        "ferma_type": "Generic Drug",
+	        "real_world_type": "Brand Drug"
+	    }
+	});
 });
 
 router.get('/analytics', function(req, res, next) {
