@@ -3,7 +3,64 @@
     border: 1px solid #80808059;
     border-radius: 7px;
     padding: 12px;
+
+    .initial {
+        float: right;
+    }
 }
+
+
+.card-field{
+    margin-left: 20px;
+    font-size: 11px;
+    padding-bottom: 0px;
+}
+
+.css-2b097c-container {
+    margin-left: 20px;
+}
+
+.css-yk16xz-control {
+    min-height: auto !important;
+}
+
+.input {
+    margin: 10px;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #80808059;
+    margin-left: 29px;
+    width: calc(100% - 39px);
+}
+
+.tag {
+    font-weight: 900;
+    font-style: italic;
+}
+
+.verified-status {
+    text-align: right;
+
+    svg {
+        overflow: visible;
+        color: green;
+    }
+
+    .status {
+        display: inline-block;
+        margin-left: 5px;
+        color: green;
+        font-weight: 700;
+        /* font-size: 15px; */
+    }
+}
+
+.actions {
+    &.align-right {
+         text-align: right;     
+    }
+}
+
 
 button {
 	border: none;
@@ -11,17 +68,31 @@ button {
     font-weight: 900;
     letter-spacing: 0.15em;
     font-size: 0.8rem;
-    padding: 9px;
+    padding: 8px 18px;
     margin-top: 25px;
     color: white;
     outline: none;
     background-color: #0858cf;
-    
+    margin-right: 5px;
     &:focus {
         outline: none;
     }
 
     &:hover {
         cursor: pointer;
+    }
+    &.grey {
+        background-color: grey;
+        svg {
+            margin-right: 5px;
+            font-size: 17px;
+            vertical-align: sub;
+        }
+    }
+    &.green {
+        background-color: green;
+    }
+    &.red {
+        background-color: red;
     }
 }

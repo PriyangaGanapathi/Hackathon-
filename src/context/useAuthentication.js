@@ -13,6 +13,11 @@ export const authenticationListener = new customEventListener();
 function useAuthentication() {
 
 	const [ token, setToken, removeToken ] = useLocalStorage(LOCAL_STORAGE_KEYS.TOKEN);
+	const [ level, setLevel, removeLevel ] = useLocalStorage('level');
+	const [ contributions, setContributions, removeContributions] =  useLocalStorage('contributions');
+	const [ username, setUsername, removeUsername] = useLocalStorage('username');
+	const [ email, setEmail, removeEmail] = useLocalStorage('email');
+
 
 	const authenticate = async (credentials = {}) => {
 		try {
@@ -21,6 +26,10 @@ function useAuthentication() {
 				data: data
 			});
 			setToken(response.token);
+			setLevel(response.level);
+			setContributions(response.contributions);
+			setUsername(response.username);
+			setEmail(response.email);
 			return response;
 		} catch(error) {
 			return Promise.reject(error);
@@ -44,6 +53,10 @@ function useAuthentication() {
 	useEffect(() => {
 		return authenticationListener.subscribeEvent(AUTHENTICATION_EVENTS.LOGOUT, () => {
 			removeToken();
+			removeLevel();
+			removeContributions();
+			removeUsername();
+			removeEmail();
 		});
 	}, []);
 
@@ -51,7 +64,12 @@ function useAuthentication() {
 		token,
 		isAuthenticated,
 		authenticate,
-		unauthenticate
+		unauthenticate,
+		setContributions,
+		contributions,
+		username,
+		email,
+		level
 	}
 }
 
@@ -59,7 +77,11 @@ const authContext = createContext({
 	token: null,
 	isAuthenticated: () => {},
 	authenticate: () => {},
-	unauthenticate: () => {}
+	unauthenticate: () => {},
+	setContributions:() => {},
+	contributions: null,
+	username: null,
+	email: null
 });
 
 export function ProvideAuth({ children }) {

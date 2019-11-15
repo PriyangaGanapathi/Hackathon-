@@ -6,7 +6,11 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-	res.json({ token: 'qwertyuiopasdfghjkl' });
+	res.json({ token: 'qwertyuiopasdfghjkl',
+		level: "Expert",
+		contributions: 150,
+		email: "ta1@zrx.com",
+		username: "name" });
 });
 
 router.get('/logout', function (req, res, next) {

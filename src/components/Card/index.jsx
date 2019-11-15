@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import sendWSRequest from '../../services/web-interface';
 import Select from 'react-select';
+import { useAuth } from '../../context/useAuthentication';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 import './styles.scss';
 
@@ -11,6 +14,8 @@ export default function Card(props) {
 	const [selectedConcept, setSelectedConcept] = useState();
 	const [comments, setComments] = useState('');
 	const [id, setId] = useState(null);
+
+	const { contributions, setContributions } = useAuth();
 
 	const getConcepts = async () => {
 		try {
@@ -34,7 +39,6 @@ export default function Card(props) {
 	}, []);
 
 	const submit = async (state) => {
-		setCardState(state);
 		let feedback = {
 			status: state === 'notsure' ? 0 : ( state === 'verified' ? 1: 2), 
 			keyword: props.content.card_details.keyword,
@@ -66,6 +70,10 @@ export default function Card(props) {
 			let response = await sendWSRequest(`/save_feedback`, {
 				data: data
 			});
+			if (state === 'verified' || state === 'updated') {
+				setContributions(contributions + 1);
+			}
+			setCardState(state);
 			setId(response.id);
 			response.next_card && props.addNewCard(response.next_card);
 		} catch(error) {
@@ -76,19 +84,25 @@ export default function Card(props) {
 	return (
 		<div class="card">
 			{ props.content.card_type === 1 &&
-				<div class="card-question">Is {props.content.card_details.keyword} is a type of {props.content.card_details.real_world_type} ?</div>
+				<div class="card-question">Is <span class="tag">{props.content.card_details.keyword}</span> is a type of <span class="tag">{props.content.card_details.real_world_type}</span> ?</div>
 			}
 			{ props.content.card_type === 2 &&
-				<div class="card-question">Is {props.content.card_details.keyword} is a {props.content.card_details.rel_type} {props.content.card_details.rel_keyword_rw_type}</div>
+				<div class="card-question">Is <span class="tag">{props.content.card_details.keyword}</span> is a <span class="tag">{props.content.card_details.rel_type} {props.content.card_details.rel_keyword_rw_type}</span></div>
 			}
 			{ props.content.card_type === 1 && cardState === 'edit' &&
 				<>
-				<div class="card-question"> What type do you suggest</div>
+				<div class="card-field"> What type do you suggest?</div>
 				<Select 
 					className="select"
 					options={concepts}
 					value={selectedConcept} 
-					onChange={ selected => setSelectedConcept(selected)}/></>
+					onChange={ selected => setSelectedConcept(selected)}
+					styles={{
+						option: base => ({
+							...base,
+							height: '50px',
+						}),
+					}}/></>
 			}
 			{
 				cardState === 'edit' && 
@@ -102,25 +116,37 @@ export default function Card(props) {
 			<div>
 				{ (cardState === 'initial' || cardState === 'notsure') &&
 					<div class="actions">
-						<button onClick={ () => { submit('notsure')}}>Not Sure</button>
-						<div>
-							<button onClick={ () => { submit('verified')}}>Yes</button>
-							<button onClick={ () => { setCardState('edit')} }>No</button>
+						<button class="grey" onClick={ () => { submit('notsure')}}>
+							{ id && 
+								<FontAwesomeIcon icon={faCheckCircle} />
+							}
+							<FontAwesomeIcon icon="check-circle" />
+							Not Sure
+						</button>
+						<div class='initial'>
+							<button class="green" onClick={ () => { submit('verified')}}>Yes</button>
+							<button class="red" onClick={ () => { setCardState('edit')} }>No</button>
 						</div>
 					</div>
 				}
 				{ cardState === 'verified' &&
-					<div class="actions">Verified</div>
+					<div class="verified-status">
+						<FontAwesomeIcon icon={faCheckCircle} />
+						<div class="status">Verified</div>
+					</div>
 				}
 				{
 					cardState === 'edit' && 
-					<div class="actions">
-						<button onClick={ () => { setCardState('initial')} }>Cancel</button>
-						<button onClick={ () => { submit('updated')}}>Suggested</button>
+					<div class="actions align-right">
+						<button class="grey" onClick={ () => { setCardState('initial')} }>Cancel</button>
+						<button class="green" onClick={ () => { submit('updated')}}>Suggested</button>
 					</div>
 				}
-				{ (cardState === 'updated') &&
+				{ cardState === 'updated' && props.content.card_type === 1 &&
 					<div>Suggested: {selectedConcept.label} Commented: {comments}</div>
+				}
+				{ cardState === 'updated' && props.content.card_type === 2 &&
+					<div>Suggested : {comments}</div>
 				}
 			</div>
 		</div>

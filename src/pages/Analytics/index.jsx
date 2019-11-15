@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import sendWSRequest from '../../services/web-interface';
 
 import './style.scss';
-import ConfusionMatrixChart from '../../components/ConfusionMatrixChart';
+// import ConfusionMatrixChart from '../../components/ConfusionMatrixChart';
 
 export default function Analytics() {
     const [concepts, setConcepts] = useState([]);

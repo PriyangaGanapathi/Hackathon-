@@ -30,17 +30,17 @@ export default function Home() {
 }
 
 const Header = withRouter(({history}) => {
-    const { unauthenticate } = useAuth();
+    const { unauthenticate, contributions, username, email, level } = useAuth();
 
     return (
         <div className='header'>
             <img className="logo-icon" src={logoIcon} alt="" />
             <div className='title'>PHARMATICA</div>
             <div className='user-details'>
-                <div className='level'>1</div>
+                <div className='level'>{level}</div>
                 <div className='info'>
-                    <div className='email'>john.doe@ferma.com</div>
-                    <div className='contributions'>Your contributions:<b>100</b></div>
+                    <div className='email'>{email}</div>
+                    <div className='contributions'>Your contributions:<b>{contributions}</b></div>
                 </div>
                 <div className='graph' onClick={() => history.push('/analytics')}><FontAwesomeIcon icon={faChartBar} /></div>
                 <div className='logout' onClick={() => unauthenticate()}><FontAwesomeIcon icon={faSignOutAlt} /></div>
