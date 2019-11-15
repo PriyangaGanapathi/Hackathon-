@@ -24,11 +24,23 @@
         }
     }
 
+    .stats {
+        margin: 15px 0;
+    }
+
+    .flex-wrapper {
+        display: flex;
+        align-items: center;
+        align-content: flex-start;
+        justify-content: space-evenly;
+    }
+
     .overall-stats-tile {
         display: inline-block;
         border: 1px solid #ccc;
         border-radius: 6px;
         padding: 10px;
+        transform: scale(1.5);
         .total-count {
             font-size: 20px;
             font-weight: bold;
@@ -57,5 +69,8 @@
                 border-radius: 5px;
             }
         }
+    }
+    .chart-container {
+        display: inline-block;
     }
 }
