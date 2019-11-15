@@ -6,108 +6,123 @@ import './styles.scss';
 
 export default function Card(props) {
 
-	const [edit, setEdit] = useState(false);
-	const [comments, setComments] = useState(null);
-	const [selectedCategorie, setSelectedCategorie] = useState(null);
+	const [concepts, setConcepts] = useState([]);
+	const [cardState, setCardState] = useState('initial');
+	const [selectedConcept, setSelectedConcept] = useState();
+	const [comments, setComments] = useState('');
+	const [id, setId] = useState(null);
 
-	const onSkip = () => {
-		const data = {
-			type: 1,
-			feedback: {
-				keyword: props.content.keyword, 
-				status: 0,
-				keyword_rw_type:"",
-				comment:'',
-			}
-		};
-		submitData(data);
-	}
-
-	const onApprove = () => {
-		const data = {
-			type: 1,
-			feedback: {
-				keyword: props.content.keyword, 
-				status: 1,
-				keyword_rw_type:"",
-				comment:'',
-			}
-		};
-		submitData(data);
-	}
-	const onUpdate = () => {
-		const data = {
-			type: 1,
-			feedback: {
-				keyword: props.content.keyword, 
-				status: 2,
-				keyword_rw_type: selectedCategorie.label,
-				comment: comments
-			}
-		};
-		submitData(data);
-	}
-
-	const submitData = async (content) => {
+	const getConcepts = async () => {
 		try {
-			await sendWSRequest('/save_feedback', {
-				data: content
+			let response = await sendWSRequest(`/fetch_concepts`);
+			response = response.map( concept => {
+				return {
+					value: concept,
+					label: concept
+				}
 			});
-			props.removeCard(props.content.keyword);
+			setConcepts(response);
 		} catch(error) {
-			alert(error);
+			console.log(error);
 		}
-		
 	}
 
+	useEffect(()=> {
+		if (props.content.card_type === 1) {
+			getConcepts();
+		}
+	}, []);
+
+	const submit = async (state) => {
+		setCardState(state);
+		let feedback = {
+			status: state === 'notsure' ? 0 : ( state === 'verified' ? 1: 2), 
+			keyword: props.content.card_details.keyword,
+			comment: comments
+		};
+		if (props.content.card_type === 1) {
+			feedback = {
+				keyword_rw_type: state === 'edit' ? selectedConcept.label : props.content.card_details.real_world_type,
+				...feedback,
+			}
+		} else {
+			feedback = {
+				rel_keyword: props.content.card_details.rel_keyword,
+				...feedback,
+			}
+		}
+		if (id) {
+			feedback = {
+				id: id,
+				...feedback,
+			}
+		}
+		let data = {
+			type: props.content.card_type,
+			feedback: feedback
+		}
+
+		try {
+			let response = await sendWSRequest(`/save_feedback`, {
+				data: data
+			});
+			setId(response.id);
+			response.next_card && props.addNewCard(response.next_card);
+		} catch(error) {
+			console.log(error);
+		}
+	}
 
 	return (
 		<div class="card">
-			<div class="title">{props.content.keyword}</div>
-        		<div class="info">
-        			<div class="ferma">{props.content.ferma_type}</div>
-        			{ props.type == 'classifications' && edit ? ( 
-        				<div>
-							<Select options={props.options} value={selectedCategorie} onChange={ selected => setSelectedCategorie(selected)} />
-						</div>
-						) : (
+			{ props.content.card_type === 1 &&
+				<div class="card-question">Is {props.content.card_details.keyword} is a type of {props.content.card_details.real_world_type} ?</div>
+			}
+			{ props.content.card_type === 2 &&
+				<div class="card-question">Is {props.content.card_details.keyword} is a {props.content.card_details.rel_type} {props.content.card_details.rel_keyword_rw_type}</div>
+			}
+			{ props.content.card_type === 1 && cardState === 'edit' &&
+				<>
+				<div class="card-question"> What type do you suggest</div>
+				<Select 
+					className="select"
+					options={concepts}
+					value={selectedConcept} 
+					onChange={ selected => setSelectedConcept(selected)}/></>
+			}
+			{
+				cardState === 'edit' && 
+				<input class="input"
+						type="text" 
+						placeholder="Comments" 
+						value={comments} 
+						onChange={(e) => setComments(e.target.value)}
+				/>
+			}
+			<div>
+				{ (cardState === 'initial' || cardState === 'notsure') &&
+					<div class="actions">
+						<button onClick={ () => { submit('notsure')}}>Not Sure</button>
 						<div>
-							<div class="real">{props.content.real_world_type}</div>
+							<button onClick={ () => { submit('verified')}}>Yes</button>
+							<button onClick={ () => { setCardState('edit')} }>No</button>
 						</div>
-						)
-					}
-        		</div>
-        		{ edit ? (
-        			<div>
-	        			<input
-	                            type='text'
-	                            name='Comments'
-	                            placeholder='Comments'
-	                            value={comments}
-	                            onChange={(e) => setComments(e.target.value)}
-	                        />
-        			</div>
-        		):(<></>)}
-			<div class="actions">
-				<button onClick={onSkip}>
-					skip
-				</button>
-				{ !edit ? (
-					<div>
-						<button onClick={onApprove}>
-							yes
-						</button>
-						<button onClick={() => setEdit(true)}>
-							no
-						</button>
 					</div>
-				) : (
-					<button onClick={onUpdate}>
-						update
-					</button>
-				)
+				}
+				{ cardState === 'verified' &&
+					<div class="actions">Verified</div>
+				}
+				{
+					cardState === 'edit' && 
+					<div class="actions">
+						<button onClick={ () => { setCardState('initial')} }>Cancel</button>
+						<button onClick={ () => { submit('updated')}}>Suggested</button>
+					</div>
+				}
+				{ (cardState === 'updated') &&
+					<div>Suggested: {selectedConcept.label} Commented: {comments}</div>
 				}
 			</div>
 		</div>
-		);
+		);	
 }
