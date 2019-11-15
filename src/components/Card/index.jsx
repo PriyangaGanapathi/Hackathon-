@@ -51,10 +51,11 @@ export default function Card(props) {
 			}
 		} else {
 			feedback = {
-				keyword_rw_type: props.content.card_details.keyword_rw_type,
+				keyword_rw_type: props.content.card_details.rel_keyword_rw_type,
 				rel_keyword: props.content.card_details.rel_keyword,
 				...feedback,
 			}
+			console.log(feedback);
 		}
 
 		let data = {
