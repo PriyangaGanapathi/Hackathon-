@@ -57,8 +57,8 @@ router.get('/analytics', function(req, res, next) {
 		'overall_stats': {
 			total: 100,
 			approved: 20,
-			suggestions: 20,
-			skipped: 10
+			corrections: 20,
+			confusions: 10
 		}		
 		
 	})

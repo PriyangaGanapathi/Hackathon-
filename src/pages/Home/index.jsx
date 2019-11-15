@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt, faChartBar } from '@fortawesome/free-solid-svg-icons';
 
@@ -23,7 +23,7 @@ export default function Home() {
                 <Route path='/'>
                     <Dashboard />
                 </Route>                
-                <Redirect path='/' />
+                {/* <Redirect path='/' /> */}
             </Switch>
         </div>
     );
@@ -35,7 +35,9 @@ const Header = withRouter(({history}) => {
     return (
         <div className='header'>
             <img className="logo-icon" src={logoIcon} alt="" />
-            <div className='title'>PHARMATICA</div>
+             <Link to="/">
+              <div className='title'>PHARMATICA</div>
+             </Link>
             <div className='user-details'>
                 <div className='level'>{level}</div>
                 <div className='info'>
@@ -44,7 +46,7 @@ const Header = withRouter(({history}) => {
                 </div>
                 <div className='graph' onClick={() => history.push('/analytics')}><FontAwesomeIcon icon={faChartBar} /></div>
                 <div className='logout' onClick={() => unauthenticate()}><FontAwesomeIcon icon={faSignOutAlt} /></div>
-            </div>
         </div>
+      </div>
     );
 })

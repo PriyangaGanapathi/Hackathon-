@@ -51,19 +51,22 @@ export default function Card(props) {
 			}
 		} else {
 			feedback = {
+				keyword_rw_type: props.content.card_details.keyword_rw_type,
 				rel_keyword: props.content.card_details.rel_keyword,
 				...feedback,
 			}
 		}
-		if (id) {
-			feedback = {
-				id: id,
-				...feedback,
-			}
-		}
+
 		let data = {
 			type: props.content.card_type,
 			feedback: feedback
+		}
+
+		if (id) {
+			data = {
+				id: id,
+				...data
+			}
 		}
 
 		try {

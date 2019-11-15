@@ -1,0 +1,16 @@
+.chart {
+    display: table;
+    .chart-row {
+        display: table-row;
+    }
+    .chart-column {
+        display: table-cell;
+        padding: 80px;
+    }
+    .chart-header {
+        display: table-cell;
+        text-align: center;
+        padding: 10px;
+        font-weight: bold;
+    }
+}
