@@ -1,0 +1,61 @@
+.analytics-page {
+    margin: 15px;
+    .page-header {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    .title {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .concept-tile {
+        font-size: 12px;
+        display: inline-block;
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin: 5px;
+        cursor: pointer;
+        &.active {
+            border: 2px solid #888;
+            font-weight: bold;
+        }
+    }
+
+    .overall-stats-tile {
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px;
+        .total-count {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .total-row .tile-header {
+            margin: 10px;
+        }
+        .splits-row {
+            display: flex;
+            justify-content: space-between;
+            .column {
+                margin: 10px;
+            }
+            .tile-header {
+                text-align: center;
+                font-size: 10px;
+            }
+            .tile-count {
+                font-size: 14px;
+                margin: 5px 0;
+                padding: 10px;
+                width: 50px;
+                text-align: center;
+                background: #ddd;
+                border-radius: 5px;
+            }
+        }
+    }
+}

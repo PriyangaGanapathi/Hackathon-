@@ -19,7 +19,6 @@ export default function Login() {
 	}
 
 	const onSubmit = (values, { setSubmitting }) => {
-		console.log(values);
 		authenticate(values).then( response => {
 			setSubmitting(false);
 		}).catch( error => {
@@ -28,25 +27,27 @@ export default function Login() {
 	}
 
 	return (
-		<div>
-    		<h1>FERMA.AI</h1>
-		    <Formik
-		    	initialValues={{ username: '', password: '' }}
-				validate={ validate }
-				onSubmit={ onSubmit }
-			>
-				{({ isSubmitting }) => (
-					<Form>
-						<Field className="form__input" placeholder="Username" type="text" name="username" />
-						<ErrorMessage className="form__error-msg" name="username" component="div" />
-						<Field className="form__input" placeholder="Password" type="password" name="password" />
-						<ErrorMessage className="form__error-msg" name="password" component="div" />
-						<button className="form__button" type="submit" disabled={isSubmitting}>
-							Login
-						</button>
-					</Form>
-				)}
-			</Formik>
+		<div className='login'>    		
+			<div className='login-container'>
+				<h1>FERMA.AI</h1>
+				<Formik
+					initialValues={{ username: '', password: '' }}
+					validate={ validate }
+					onSubmit={ onSubmit }
+				>
+					{({ isSubmitting }) => (
+						<Form>
+							<Field className="form__input" placeholder="Username" type="text" name="username" />
+							<ErrorMessage className="form__error-msg" name="username" component="div" />
+							<Field className="form__input" placeholder="Password" type="password" name="password" />
+							<ErrorMessage className="form__error-msg" name="password" component="div" />
+							<button className="form__button" type="submit" disabled={isSubmitting}>
+								Login
+							</button>
+						</Form>
+					)}
+				</Formik>
+			</div>
 		</div>
 	);
 }
