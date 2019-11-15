@@ -49,7 +49,7 @@ function buildURL(route) {
 export default async function sendWSRequest(route, customConfig = {}) {
     try {
 
-        const token = window.localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN) || null;
+        const token = JSON.parse(window.localStorage.getItem(LOCAL_STORAGE_KEYS.TOKEN)) || null;
         const headers = {};
         
         if (token) {

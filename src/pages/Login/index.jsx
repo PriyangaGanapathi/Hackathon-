@@ -10,17 +10,16 @@ export default function Login() {
 
 	const validate = values => {
 		const errors = {};
-		if (!values.email) {
-			errors.email = 'Required';
+		if (!values.username) {
+			errors.username = 'Required';
 		} else if(!values.password) {
 			errors.password = 'Required';
-		} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-			errors.email = 'Invalid email address';
 		}
 		return errors;
 	}
 
 	const onSubmit = (values, { setSubmitting }) => {
+		console.log(values);
 		authenticate(values).then( response => {
 			setSubmitting(false);
 		}).catch( error => {
@@ -32,14 +31,14 @@ export default function Login() {
 		<div>
     		<h1>FERMA.AI</h1>
 		    <Formik
-		    	initialValues={{ email: '', password: '' }}
+		    	initialValues={{ username: '', password: '' }}
 				validate={ validate }
 				onSubmit={ onSubmit }
 			>
 				{({ isSubmitting }) => (
 					<Form>
-						<Field className="form__input" placeholder="Username" type="email" name="email" />
-						<ErrorMessage className="form__error-msg" name="email" component="div" />
+						<Field className="form__input" placeholder="Username" type="text" name="username" />
+						<ErrorMessage className="form__error-msg" name="username" component="div" />
 						<Field className="form__input" placeholder="Password" type="password" name="password" />
 						<ErrorMessage className="form__error-msg" name="password" component="div" />
 						<button className="form__button" type="submit" disabled={isSubmitting}>

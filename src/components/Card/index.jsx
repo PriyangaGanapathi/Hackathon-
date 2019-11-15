@@ -13,10 +13,12 @@ export default function Card(props) {
 	const onSkip = () => {
 		const data = {
 			type: 1,
-			keyword: props.content.keyword, 
-			status: 0,
-			keyword_rw_type:"",
-			comment:'',
+			feedback: {
+				keyword: props.content.keyword, 
+				status: 0,
+				keyword_rw_type:"",
+				comment:'',
+			}
 		};
 		submitData(data);
 	}
@@ -24,20 +26,24 @@ export default function Card(props) {
 	const onApprove = () => {
 		const data = {
 			type: 1,
-			keyword: props.content.keyword, 
-			status: 1,
-			keyword_rw_type:"",
-			comment:'',
+			feedback: {
+				keyword: props.content.keyword, 
+				status: 1,
+				keyword_rw_type:"",
+				comment:'',
+			}
 		};
 		submitData(data);
 	}
 	const onUpdate = () => {
 		const data = {
 			type: 1,
-			keyword: props.content.keyword, 
-			status: 2,
-			keyword_rw_type: selectedCategorie.label,
-			comment: comments
+			feedback: {
+				keyword: props.content.keyword, 
+				status: 2,
+				keyword_rw_type: selectedCategorie.label,
+				comment: comments
+			}
 		};
 		submitData(data);
 	}
