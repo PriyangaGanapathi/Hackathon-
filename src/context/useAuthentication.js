@@ -12,20 +12,15 @@ export const authenticationListener = new customEventListener();
 
 function useAuthentication() {
 
-	const [ token, setToken, removeToken ] = useLocalStorage(LOCAL_STORAGE_KEYS.TOKEN),
-		  [ userDetails, setUserDetails, removeUserDetails ] = useLocalStorage(LOCAL_STORAGE_KEYS.USER_DETAILS);
+	const [ token, setToken, removeToken ] = useLocalStorage(LOCAL_STORAGE_KEYS.TOKEN);
 
 	const authenticate = async (credentials = {}) => {
 		try {
-			let data = {
-				staysigned: false,
-				...credentials
-			};
-			let response = await sendWSRequest(`users/login`, { 
+			let data = credentials;
+			let response = await sendWSRequest(`/login`, { 
 				data: data
 			});
 			setToken(response.token);
-			setUserDetails(response.userDetails);
 			return response;
 		} catch(error) {
 			return Promise.reject(error);
@@ -34,9 +29,8 @@ function useAuthentication() {
 
 	const unauthenticate = async () => {
 		try {
-			let response = await sendWSRequest(`users/${userDetails.id}/logout`);
+			let response = await sendWSRequest(`/logout`);
 			removeToken();
-			removeUserDetails();
 			return response;
 		} catch(error) {
 			return Promise.reject(error);
@@ -50,14 +44,12 @@ function useAuthentication() {
 	useEffect(() => {
 		return authenticationListener.subscribeEvent(AUTHENTICATION_EVENTS.LOGOUT, () => {
 			removeToken();
-			removeUserDetails();
 		});
 	}, []);
 
 	return {
 		token,
 		isAuthenticated,
-		userDetails,
 		authenticate,
 		unauthenticate
 	}
@@ -66,7 +58,6 @@ function useAuthentication() {
 const authContext = createContext({
 	token: null,
 	isAuthenticated: () => {},
-	userDetails: null,
 	authenticate: () => {},
 	unauthenticate: () => {}
 });

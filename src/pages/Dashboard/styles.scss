@@ -1,0 +1,17 @@
+.menu-container {
+
+	display: flex;
+	text-align: center;
+	margin: 20px;
+
+	.menu-item {
+	    min-height: 250px;
+	    border-radius: 8px;
+	    border: 1px solid #dadce0;
+	    box-shadow: none;
+	    cursor: pointer;
+	    margin: 8px;
+	    text-decoration: none;
+	    width: calc((100%/2) - 8px);
+	}
+}

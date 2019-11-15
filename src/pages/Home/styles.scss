@@ -1,0 +1,19 @@
+.header {
+	color: white;
+	font-weight: bolder;
+	height: 50px;
+	background: #0858cf;
+	display: flex;
+	align-items: center;
+
+	.home-icon {
+		color: white;
+		width: 50px;
+		font-size: 30px;
+	}
+
+	.title {
+		width: 100%;
+		text-align: center;
+	}
+}
