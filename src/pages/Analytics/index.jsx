@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import sendWSRequest from '../../services/web-interface';
+import { ClipLoader, PulseLoader } from "react-spinners";
 
 import './style.scss';
 import ConfusionMatrixChart from '../../components/ConfusionMatrixChart';
+
 
 export default function Analytics() {
     const [concepts, setConcepts] = useState([]);
@@ -36,9 +38,9 @@ export default function Analytics() {
     //     setComputedMetrics(computedData);
     // }
 
-    const getStats = async () => {
+    const getStats = async (concept) => {
         try {
-            const response = await sendWSRequest(`/analytics?concept=${currentConcept}`);
+            const response = await sendWSRequest(`/analytics?concept=${concept}`);
             setStats(response);            
         } catch (error) {
             console.log(error);
@@ -50,28 +52,31 @@ export default function Analytics() {
             const response = await sendWSRequest(`/fetch_concepts`);
             setConcepts(response);
             setCurrentConcept(response[0]);
-            getStats();
+            getStats(response[0]);
         } catch (error) {
             console.log(error);
         }
     };
 
     const updateCurrentConcept = (concept) => {
+        setStats({});
         setCurrentConcept(concept);
-        getStats();
+        getStats(concept);
     }
 
     useEffect(() => {
         getConcepts();
-    }, []);
+    }, []);    
 
-    
-
-    return (
-      <div className="analytics-page">
-        <div className="page-header">
-            KPI Dashboard
+    return concepts.length <= 0 ? (
+      <div className="spinner-overlay">
+        <div className="spinner">
+          <PulseLoader loading={true} size={10} color={"#0B6EF4"} />
         </div>
+      </div>
+    ) : (
+      <div className="analytics-page">
+        <div className="page-header">KPI Dashboard</div>
         <div className="title">Concepts</div>
         {concepts.map((concept, index) => (
           <div
@@ -87,43 +92,44 @@ export default function Analytics() {
         ))}
         <div className="stats">
           <div className="title">Stats for {currentConcept}</div>
-          <div className="flex-wrapper">
-            {stats.confusion_matrix && (
-              <div className="chart-container">
-                <ConfusionMatrixChart data={stats.confusion_matrix} />
-              </div>
-            )}
-            {stats.overall_stats && (
-              <div className="overall-stats-tile">
-                <div className="row total-row">
-                  <div className="tile-header">Total</div>
-                  <div className="tile-count total-count">
-                    {stats.overall_stats.total}
-                  </div>
+          {stats.overall_stats ? (
+            <div className="flex-wrapper">
+              {stats.confusion_matrix && (
+                <div className="chart-container">
+                  <ConfusionMatrixChart data={stats.confusion_matrix} />
                 </div>
-                <div className="row splits-row">
-                  <div className="column">
-                    <div className="tile-header">Approved</div>
-                    <div className="tile-count">
-                      {stats.overall_stats.approved}
+              )}
+              {stats.overall_stats && (
+                <div className="overall-stats-tile">
+                  <div className="row total-row">
+                    <div className="tile-header">Total</div>
+                    <div className="tile-count total-count">
+                      {stats.overall_stats.total}
                     </div>
                   </div>
-                  <div className="column">
-                    <div className="tile-header">Corrections</div>
-                    <div className="tile-count">
-                      {stats.overall_stats.corrections}
+                  <div className="row splits-row">
+                    <div className="column">
+                      <div className="tile-header">Approved</div>
+                      <div className="tile-count">
+                        {stats.overall_stats.approved}
+                      </div>
                     </div>
-                  </div>
-                  <div className="column">
+                    <div className="column">
+                      <div className="tile-header">Corrections</div>
+                      <div className="tile-count">
+                        {stats.overall_stats.corrections}
+                      </div>
+                    </div>
+                    {/* <div className="column">
                     <div className="tile-header">Confusions</div>
                     <div className="tile-count">
                       {stats.overall_stats.confusions}
                     </div>
+                  </div> */}
                   </div>
                 </div>
-              </div>
-            )}
-            {/* {computedMetrics.f1 && (
+              )}
+              {/* {computedMetrics.f1 && (
                 <div className="computed-metrics-container">
                     <div className="computed-table">
                         <div className="computed-row">
@@ -133,7 +139,14 @@ export default function Analytics() {
                     </div> 
                 </div>
             )} */}
-          </div>
+            </div>
+          ) : (
+            <div className="spinner-overlay absolute">
+              <div className="spinner">
+                <ClipLoader loading={true} size={35} color={"#0B6EF4"} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

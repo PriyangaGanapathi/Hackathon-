@@ -5,7 +5,11 @@ import './style.scss';
 export default function ConfusionMatrixChart({data}) {
     const calculateAlpha = (value) => {
         let percentage = value / (data.tp + data.tn + data.fp + data.fn);
-        return `rgba(255,99,71,${percentage.toFixed(2)})`;
+        if (percentage > 0) {
+            return `rgba(255,99,71,${percentage.toFixed(2)})`;
+        } else {
+            return `rgba(255,99,71,0)`;
+        }
     }    
 
     return (

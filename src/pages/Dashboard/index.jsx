@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import sendWSRequest from '../../services/web-interface';
 import Card from '../../components/Card';
+import { PulseLoader } from "react-spinners";
 
 import './styles.scss';
 
@@ -25,11 +26,17 @@ export default function Dashboard() {
 		setCards(cards.concat(card));
 	}
 
-	return (
-		<div className="cards-container">
-            {cards.map( (card, index) => (
-            	<Card key={index} content={card} addNewCard={addNewCard}/>
-            ))}
-	    </div>
-	);
+	return cards.length <= 0 ? (
+    <div className="spinner-overlay">
+      <div className="spinner">
+        <PulseLoader loading={true} size={10} color={"#0B6EF4"} />
+      </div>
+    </div>
+  ) : (
+    <div className="cards-container">
+      {cards.map((card, index) => (
+        <Card key={index} content={card} addNewCard={addNewCard} />
+      ))}
+    </div>
+  );
 };
