@@ -1,4 +1,5 @@
 .card {
+    position: relative;
 	margin: 30px;
     border: 1px solid #80808059;
     border-radius: 7px;
@@ -122,4 +123,16 @@ button {
     &.red {
         background-color: red;
     }
+}
+
+.saving-loader {
+    position: absolute;
+    width: calc(100% - 6px);
+    bottom: -2px;
+    left: 3px;
+    z-index: 2;
+    > div {
+        border-radius: 4px;
+    }
+
 }

@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { useAuth } from '../../context/useAuthentication';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { BarLoader } from "react-spinners";
 
 import './styles.scss';
 
@@ -14,6 +15,7 @@ export default function Card(props) {
 	const [selectedConcept, setSelectedConcept] = useState();
 	const [comments, setComments] = useState('');
 	const [id, setId] = useState(null);
+	const [isSaving, setIsSaving] = useState(false);
 
 	const { contributions, setContributions } = useAuth();
 
@@ -39,6 +41,7 @@ export default function Card(props) {
 	}, []);
 
 	const submit = async (state) => {
+		setIsSaving(true);
 		let feedback = {
 			status: state === 'notsure' ? 0 : ( state === 'verified' ? 1: 2), 
 			keyword: props.content.card_details.keyword,
@@ -77,11 +80,13 @@ export default function Card(props) {
 			if (state === 'verified' || state === 'updated') {
 				setContributions(contributions + 1);
 			}
+			setIsSaving(false);
 			setCardState(state);
 			setId(response.id);
 			response.next_card && props.addNewCard(response.next_card);
 		} catch(error) {
 			console.log(error);
+			setIsSaving(false);
 		}
 	}
 
@@ -99,8 +104,10 @@ export default function Card(props) {
         <div class="card-question">
           Is <span class="tag">{props.content.card_details.keyword}</span>{" "}
           <span class="tag relationship">
-            {props.content.card_details.rel_type}</span>{" "}
-            <span className='tag'>{props.content.card_details.rel_keyword_rw_type}
+            {props.content.card_details.rel_type}
+          </span>{" "}
+          <span className="tag">
+            {props.content.card_details.rel_keyword_rw_type}
           </span>{" "}
           ?
         </div>
@@ -226,6 +233,16 @@ export default function Card(props) {
           </>
         )}
       </div>
+      {isSaving ? (
+        <>
+          <div className="saving-loader">
+            <BarLoader loading={true} width="100%" color={"#0B6EF4"} />
+          </div>
+          <div className="clear-fix"></div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );	
 }
